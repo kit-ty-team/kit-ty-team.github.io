@@ -1,0 +1,347 @@
+<!doctype html>
+<!--
+  kit-ty · pagina "link in bio"
+
+  PLACEHOLDER DA SOSTITUIRE (cerca il testo tra parentesi quadre, parentesi comprese):
+    [DESCRIZIONE_PROGETTO]      descrizione in una riga (compare anche in meta description e og:description)
+    [URL_LINKEDIN_PETTY]        LinkedIn di Marco Pedron (Petty)
+    [NOME_COLLEGA_1]            nome del collega 1
+    [URL_LINKEDIN_COLLEGA_1]    LinkedIn del collega 1
+    [NOME_COLLEGA_2]            nome del collega 2
+    [URL_LINKEDIN_COLLEGA_2]    LinkedIn del collega 2
+    [NOME_COLLEGA_3]            nome del collega 3
+    [URL_LINKEDIN_COLLEGA_3]    LinkedIn del collega 3
+    [URL_INSTAGRAM]             profilo Instagram
+    [URL_X]                     profilo X
+    [URL_MASTODON]              profilo Mastodon
+    [URL_BLUESKY]               profilo Bluesky
+
+  I bottoni che non usi vanno CANCELLATI: rimuovi l'intero <li>...</li> che li contiene.
+  Se una sezione resta vuota, cancella tutta la sua <section>.
+-->
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>kit-ty</title>
+  <meta name="description" content="kit-ty: [DESCRIZIONE_PROGETTO]">
+  <meta name="theme-color" content="#FFF5F8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1C1519" media="(prefers-color-scheme: dark)">
+  <meta name="referrer" content="no-referrer">
+
+  <link rel="icon" href="assets/cat-heads/kitty-head-happy.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="kit-ty">
+  <meta property="og:description" content="[DESCRIZIONE_PROGETTO]">
+  <meta property="og:url" content="https://kit-ty-team.github.io">
+  <meta property="og:image" content="https://kit-ty-team.github.io/assets/og-image.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Testa di gatto in pixel art, mascotte di kit-ty">
+  <meta name="twitter:card" content="summary">
+
+  <style>
+    :root {
+      --bg: #FFF5F8;
+      --card: #FFFFFF;
+      --text: #2A2027;
+      --muted: #5E4A57;
+      --accent: #F25481;
+      --soft: #FBC3D3;
+      --btn: #81366F;
+      --btn-text: #FFFFFF;
+      --btn-hover: #6A2B5B;
+      --social: #2F6A70;
+      --social-text: #FFFFFF;
+      --social-hover: #24555A;
+      --tile: #FFFFFF;
+      --tile-border: #FBC3D3;
+      --focus: #42848A;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1C1519;
+        --card: #2A2027;
+        --text: #FBE9EF;
+        --muted: #D9BCC8;
+        --accent: #F25481;
+        --soft: #FBC3D3;
+        --btn: #F25481;
+        --btn-text: #2A2027;
+        --btn-hover: #F7799E;
+        --social: #D6E8E9;
+        --social-text: #1C2A2B;
+        --social-hover: #BFDCDE;
+        --tile: #FFFFFF;
+        --tile-border: #81366F;
+        --focus: #D6E8E9;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 17px;
+      line-height: 1.45;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; image-rendering: pixelated; }
+
+    main {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 32px 16px 40px;
+    }
+
+    header { text-align: center; }
+    .avatar {
+      width: 112px;
+      height: 112px;
+      margin: 0 auto 12px;
+      padding: 8px;
+      border-radius: 50%;
+      background: var(--tile);
+      border: 4px solid var(--accent);
+      overflow: hidden;
+    }
+    .avatar img { width: 100%; height: 100%; border-radius: 50%; }
+    h1 {
+      margin: 0;
+      font-size: 2.25rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .tagline {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    .strip {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 20px 0 8px;
+      padding: 0;
+      list-style: none;
+    }
+    .strip img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--tile);
+      border: 2px solid var(--tile-border);
+    }
+
+    section { margin-top: 28px; }
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 12px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    h2::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    ul.links {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 56px;
+      padding: 10px 18px;
+      border-radius: 16px;
+      background: var(--btn);
+      color: var(--btn-text);
+      font-weight: 600;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+      transition: background-color .15s ease, transform .15s ease;
+    }
+    .btn:hover { background: var(--btn-hover); }
+    .btn:active { transform: scale(0.98); }
+    .btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+    .btn .label { flex: 1; }
+    .btn .label small { display: block; font-weight: 500; font-size: .8rem; }
+    .btn .arrow { flex: none; font-size: 1.1rem; }
+    .btn .head {
+      flex: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--tile);
+    }
+    .btn.primary { min-height: 64px; font-size: 1.1rem; }
+    .btn.social { background: var(--social); color: var(--social-text); }
+    .btn.social:hover { background: var(--social-hover); }
+    .btn .badge {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .18);
+      font-size: .95rem;
+      font-weight: 700;
+    }
+    @media (prefers-color-scheme: dark) {
+      .btn .badge { background: rgba(0, 0, 0, .12); }
+    }
+
+    footer {
+      margin-top: 36px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+    footer img { width: 28px; height: 28px; margin: 0 auto 6px; border-radius: 6px; background: var(--tile); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn { transition: none; }
+      .btn:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="avatar">
+        <img src="assets/cat-heads/kitty-head-happy.svg" alt="Mascotte di kit-ty: testa di gatto sorridente" width="96" height="96">
+      </div>
+      <h1>kit-ty</h1>
+      <p class="tagline">[DESCRIZIONE_PROGETTO]</p>
+      <ul class="strip" aria-hidden="true">
+        <li><img src="assets/cat-heads/kitty-head-alice.svg" alt="" width="36" height="36"></li>
+        <li><img src="assets/cat-heads/kitty-head-bob.svg" alt="" width="36" height="36"></li>
+        <li><img src="assets/cat-heads/kitty-head-charlie.svg" alt="" width="36" height="36"></li>
+        <li><img src="assets/cat-heads/kitty-head-dave.svg" alt="" width="36" height="36"></li>
+        <li><img src="assets/cat-heads/kitty-head-angry.svg" alt="" width="36" height="36"></li>
+        <li><img src="assets/cat-heads/kitty-head-worried.svg" alt="" width="36" height="36"></li>
+        <li><img src="assets/cat-heads/kitty-head-out.svg" alt="" width="36" height="36"></li>
+      </ul>
+    </header>
+
+    <section aria-labelledby="h-progetto">
+      <h2 id="h-progetto">Progetto</h2>
+      <ul class="links">
+        <li>
+          <a class="btn primary" href="https://github.com/marco-pedron/kit-ty" target="_blank" rel="noopener noreferrer">
+            <img class="head" src="assets/cat-heads/kitty-head-happy.svg" alt="" width="36" height="36">
+            <span class="label">Repo GitHub</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="h-team">
+      <h2 id="h-team">Team</h2>
+      <ul class="links">
+        <li>
+          <a class="btn" href="[URL_LINKEDIN_PETTY]" target="_blank" rel="noopener noreferrer">
+            <img class="head" src="assets/cat-heads/kitty-head-alice.svg" alt="" width="36" height="36">
+            <span class="label">Marco Pedron (Petty)<small>LinkedIn</small></span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="btn" href="[URL_LINKEDIN_COLLEGA_1]" target="_blank" rel="noopener noreferrer">
+            <img class="head" src="assets/cat-heads/kitty-head-bob.svg" alt="" width="36" height="36">
+            <span class="label">[NOME_COLLEGA_1]<small>LinkedIn</small></span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="btn" href="[URL_LINKEDIN_COLLEGA_2]" target="_blank" rel="noopener noreferrer">
+            <img class="head" src="assets/cat-heads/kitty-head-charlie.svg" alt="" width="36" height="36">
+            <span class="label">[NOME_COLLEGA_2]<small>LinkedIn</small></span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="btn" href="[URL_LINKEDIN_COLLEGA_3]" target="_blank" rel="noopener noreferrer">
+            <img class="head" src="assets/cat-heads/kitty-head-dave.svg" alt="" width="36" height="36">
+            <span class="label">[NOME_COLLEGA_3]<small>LinkedIn</small></span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="h-social">
+      <h2 id="h-social">Social</h2>
+      <ul class="links">
+        <li>
+          <a class="btn social" href="[URL_INSTAGRAM]" target="_blank" rel="noopener noreferrer">
+            <span class="badge" aria-hidden="true">IG</span>
+            <span class="label">Instagram</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="btn social" href="[URL_X]" target="_blank" rel="noopener noreferrer">
+            <span class="badge" aria-hidden="true">X</span>
+            <span class="label">X</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="btn social" href="[URL_MASTODON]" target="_blank" rel="noopener noreferrer me">
+            <span class="badge" aria-hidden="true">M</span>
+            <span class="label">Mastodon</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="btn social" href="[URL_BLUESKY]" target="_blank" rel="noopener noreferrer">
+            <span class="badge" aria-hidden="true">B</span>
+            <span class="label">Bluesky</span>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="h-contatti">
+      <h2 id="h-contatti">Contatti</h2>
+      <ul class="links">
+        <li>
+          <a class="btn" href="mailto:kit-ty-info@proton.me">
+            <img class="head" src="assets/cat-heads/kitty-head-out.svg" alt="" width="36" height="36">
+            <span class="label">Scrivici<small>kit-ty-info@proton.me</small></span>
+            <span class="arrow" aria-hidden="true">✉</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <footer>
+      <img src="assets/cat-heads/kitty-head-worried.svg" alt="" width="28" height="28">
+      kit-ty
+    </footer>
+  </main>
+</body>
+</html>
