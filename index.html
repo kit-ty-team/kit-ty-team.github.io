@@ -25,6 +25,12 @@
   <meta name="theme-color" content="#FFF5F8" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1C1519" media="(prefers-color-scheme: dark)">
   <meta name="referrer" content="no-referrer">
+  <!-- Content Security Policy: blocca qualsiasi script o stile non scritto qui.
+       Se modifichi il blocco script o il blocco style, gli hash vanno ricalcolati con:
+         python3 -c "import re,hashlib,base64;s=open('index.html').read();[print(t,base64.b64encode(hashlib.sha256(re.search('<'+t+'>(.*?)</'+t+'>',s,re.S).group(1).encode()).digest()).decode()) for t in ('style','script')]"
+       e incollati al posto dei due valori sha256 qui sotto,
+       altrimenti la pagina perde animazioni o grafica. Cambiare link e testi NON richiede di ricalcolarli. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'sha256-50Cl0CqN6bMJscXJbfqwpOoC5BObs/7S7u51D47fGks='; script-src 'sha256-375yrRHOrwGIEyuWIyWhDXgJdbXHvGH7J9Kwr7dhXCY='; base-uri 'none'; form-action 'none'">
 
   <link rel="icon" href="assets/cat-heads/kitty-head-happy.svg" type="image/svg+xml">
   <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
@@ -871,7 +877,11 @@
       h.type = "button";
       h.className = "hole";
       h.setAttribute("aria-label", "Hole " + (i + 1));
-      h.innerHTML = '<img src="" alt="" width="64" height="64">';
+      var hImg = document.createElement("img");
+      hImg.alt = "";
+      hImg.width = 64;
+      hImg.height = 64;
+      h.appendChild(hImg);
       h.dataset.idx = i;
       board.appendChild(h);
       holes.push(h);
