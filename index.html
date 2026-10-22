@@ -1,5 +1,19 @@
 <!doctype html>
+<!--
+  Placeholder da sostituire prima della pubblicazione:
+    [URL_INSTAGRAM]  link al profilo Instagram
+    [URL_X]          link al profilo X
+  Se un social non esiste ancora, cancella l'intero <li> del suo bottone.
 
+  Easter egg presenti (per chi li cerca):
+    - passa il cursore sul gatto: fa le fusa
+    - clicca il gatto: abbassa la zampa; 7 clic di fila = pioggia di monete
+    - clicca le testine sotto il titolo: saltano e dicono il loro nome
+    - codice Konami (↑ ↑ ↓ ↓ ← → ← → B A): modalità festa
+    - scrivi "kitty" sulla tastiera: miao
+    - passa il cursore sul gatto preoccupato in fondo
+    - apri la console del browser
+-->
 <html lang="it">
 <head>
   <meta charset="utf-8">
@@ -32,6 +46,7 @@
       --muted: #5E4A57;
       --accent: #F25481;
       --soft: #FBC3D3;
+      --gold: #F2C14E;
       --btn: #81366F;
       --btn-text: #FFFFFF;
       --btn-hover: #6A2B5B;
@@ -41,6 +56,7 @@
       --tile: #FFFFFF;
       --tile-border: #FBC3D3;
       --focus: #42848A;
+      --shadow: rgba(129, 54, 111, .28);
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -48,17 +64,15 @@
         --card: #2A2027;
         --text: #FBE9EF;
         --muted: #D9BCC8;
-        --accent: #F25481;
-        --soft: #FBC3D3;
         --btn: #F25481;
         --btn-text: #2A2027;
         --btn-hover: #F7799E;
         --social: #D6E8E9;
         --social-text: #1C2A2B;
         --social-hover: #BFDCDE;
-        --tile: #FFFFFF;
         --tile-border: #81366F;
         --focus: #D6E8E9;
+        --shadow: rgba(0, 0, 0, .5);
       }
     }
 
@@ -73,7 +87,7 @@
       line-height: 1.45;
       overflow-x: hidden;
     }
-    img { display: block; max-width: 100%; image-rendering: pixelated; }
+    img, svg { display: block; max-width: 100%; image-rendering: pixelated; }
 
     main {
       max-width: 480px;
@@ -81,29 +95,69 @@
       padding: 32px 16px 40px;
     }
 
+    /* ---------- Mascotte ---------- */
     header { text-align: center; }
-    .avatar {
-      width: 112px;
-      height: 112px;
-      margin: 0 auto 12px;
-      padding: 8px;
+    .mascot-wrap { position: relative; width: 136px; margin: 0 auto 12px; }
+    .mascot {
+      display: block;
+      width: 136px;
+      height: 136px;
+      padding: 14px 14px 10px;
+      border: 4px solid var(--accent);
       border-radius: 50%;
       background: var(--tile);
-      border: 4px solid var(--accent);
-      overflow: hidden;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .2s ease, box-shadow .2s ease;
     }
-    .avatar img { width: 100%; height: 100%; border-radius: 50%; }
+    .mascot:hover { box-shadow: 0 8px 22px var(--shadow); }
+    .mascot:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+    .mascot svg { width: 100%; height: 100%; overflow: visible; }
+
+    /* zampa alzata: oscilla piano, come un maneki-neko */
+    .paw-up { transform-box: view-box; animation: beckon 2.4s ease-in-out infinite; }
+    @keyframes beckon {
+      0%, 60%, 100% { transform: translateY(0); }
+      70%, 85%      { transform: translateY(1px); }
+    }
+    /* clic: zampa abbassata */
+    .mascot.paw-down .paw-up { visibility: hidden; animation: none; }
+    .mascot.paw-down { transform: scale(.96); }
+
+    /* fusa: vibrazione leggera */
+    .mascot.purring .cat { animation: purr .09s linear infinite alternate; }
+    @keyframes purr {
+      from { transform: translate(-0.12px, 0); }
+      to   { transform: translate(0.12px, 0.06px); }
+    }
+
+    /* nuvolette "prrr" */
+    .purr-text {
+      position: absolute;
+      left: 50%;
+      top: 8px;
+      pointer-events: none;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+      animation: float-up 1.2s ease-out forwards;
+    }
+    @keyframes float-up {
+      from { opacity: 0; transform: translate(var(--dx, 0), 0) scale(.8); }
+      20%  { opacity: 1; }
+      to   { opacity: 0; transform: translate(var(--dx, 0), -46px) scale(1.1); }
+    }
+
     h1 {
       margin: 0;
       font-size: 2.25rem;
       letter-spacing: -0.02em;
       line-height: 1.1;
     }
-    .tagline {
-      margin: 8px 0 0;
-      color: var(--muted);
-    }
+    .tagline { margin: 8px 0 0; color: var(--muted); }
 
+    /* ---------- Fascia di testine ---------- */
     .strip {
       display: flex;
       justify-content: center;
@@ -113,14 +167,46 @@
       padding: 0;
       list-style: none;
     }
-    .strip img {
-      width: 36px;
-      height: 36px;
+    .strip button {
+      position: relative;
+      padding: 0;
+      border: 2px solid var(--tile-border);
       border-radius: 8px;
       background: var(--tile);
-      border: 2px solid var(--tile-border);
+      cursor: pointer;
+      transition: transform .15s ease;
+    }
+    .strip button:hover { transform: translateY(-3px) rotate(-4deg); }
+    .strip button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+    .strip img { width: 36px; height: 36px; border-radius: 6px; }
+    .strip button.hop { animation: hop .5s ease; }
+    @keyframes hop {
+      0%, 100% { transform: translateY(0); }
+      40%      { transform: translateY(-14px) rotate(8deg); }
+      70%      { transform: translateY(0) rotate(-4deg); }
+    }
+    .bubble {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 2px 8px;
+      border-radius: 8px;
+      background: var(--text);
+      color: var(--bg);
+      font-size: .75rem;
+      font-weight: 700;
+      white-space: nowrap;
+      pointer-events: none;
+      animation: bubble 1.4s ease forwards;
+    }
+    @keyframes bubble {
+      from { opacity: 0; transform: translate(-50%, 4px); }
+      15%, 75% { opacity: 1; transform: translate(-50%, 0); }
+      to { opacity: 0; }
     }
 
+    /* ---------- Sezioni e bottoni ---------- */
     section { margin-top: 28px; }
     h2 {
       display: flex;
@@ -146,8 +232,10 @@
       margin: 0;
       padding: 0;
       list-style: none;
+      perspective: 700px;
     }
     .btn {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -158,22 +246,40 @@
       color: var(--btn-text);
       font-weight: 600;
       text-decoration: none;
+      overflow: hidden;
       overflow-wrap: anywhere;
-      transition: background-color .15s ease, transform .15s ease;
+      transform-style: preserve-3d;
+      transition: background-color .15s ease, transform .25s ease, box-shadow .25s ease;
+      will-change: transform;
     }
+    /* riflesso che segue il cursore durante il tilt */
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .28), transparent 55%);
+      opacity: 0;
+      transition: opacity .2s ease;
+      pointer-events: none;
+    }
+    .btn.tilting { transition: background-color .15s ease, box-shadow .25s ease; box-shadow: 0 10px 24px var(--shadow); }
+    .btn.tilting::after { opacity: 1; }
     .btn:hover { background: var(--btn-hover); }
-    .btn:active { transform: scale(0.98); }
     .btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
     .btn .label { flex: 1; }
     .btn .label small { display: block; font-weight: 500; font-size: .8rem; }
-    .btn .arrow { flex: none; font-size: 1.1rem; }
+    .btn .arrow { flex: none; font-size: 1.1rem; transition: transform .2s ease; }
+    .btn:hover .arrow { transform: translate(2px, -2px); }
     .btn .head {
       flex: none;
       width: 36px;
       height: 36px;
       border-radius: 8px;
       background: var(--tile);
+      transition: transform .2s ease;
     }
+    .btn:hover .head { transform: rotate(-8deg) scale(1.08); }
     .btn.primary { min-height: 64px; font-size: 1.1rem; }
     .btn.social { background: var(--social); color: var(--social-text); }
     .btn.social:hover { background: var(--social-hover); }
@@ -192,36 +298,118 @@
       .btn .badge { background: rgba(0, 0, 0, .12); }
     }
 
+    /* ---------- Footer ---------- */
     footer {
       margin-top: 36px;
       text-align: center;
       color: var(--muted);
       font-size: .85rem;
     }
-    footer img { width: 28px; height: 28px; margin: 0 auto 6px; border-radius: 6px; background: var(--tile); }
+    footer .footer-cat {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      margin: 0 auto 6px;
+    }
+    footer img {
+      position: absolute;
+      inset: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--tile);
+      transition: opacity .2s ease;
+    }
+    footer .happy { opacity: 0; }
+    footer .footer-cat:hover .happy { opacity: 1; }
+    footer .footer-cat:hover .worried { opacity: 0; }
+    footer .hint { display: block; height: 1.2em; font-size: .75rem; opacity: 0; transition: opacity .2s ease; }
+    footer .footer-cat:hover + .hint { opacity: 1; }
+
+    /* ---------- Toast ---------- */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 20;
+      max-width: calc(100% - 32px);
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: var(--text);
+      color: var(--bg);
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 8px 24px var(--shadow);
+      opacity: 0;
+      transform: translate(-50%, 16px);
+      transition: opacity .25s ease, transform .25s ease;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ---------- Pioggia di monete ---------- */
+    .coin {
+      position: fixed;
+      top: -40px;
+      z-index: 10;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 3px solid #C99A2E;
+      box-shadow: inset -3px -3px 0 rgba(0, 0, 0, .12);
+      color: #81366F;
+      font: 700 11px/16px system-ui, sans-serif;
+      text-align: center;
+      pointer-events: none;
+      animation: fall var(--t, 2.4s) linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translate(var(--drift, 0), 110vh) rotate(var(--spin, 360deg)); }
+    }
+
+    /* ---------- Modalità festa (Konami) ---------- */
+    body.party h1 { animation: hue 2s linear infinite; background: linear-gradient(90deg, #F25481, #F2C14E, #42848A, #81366F, #F25481); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+    @keyframes hue { to { background-position: 200% 0; } }
+    body.party .strip button { animation: dance .6s ease-in-out infinite alternate; }
+    body.party .strip li:nth-child(2n) button { animation-delay: .3s; }
+    @keyframes dance {
+      from { transform: translateY(0) rotate(-8deg); }
+      to   { transform: translateY(-8px) rotate(8deg); }
+    }
+    body.party .mascot { animation: spin-in 1s ease; }
+    @keyframes spin-in { from { transform: rotate(-360deg) scale(.6); } }
 
     @media (prefers-reduced-motion: reduce) {
-      .btn { transition: none; }
-      .btn:active { transform: none; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .btn { transform: none !important; }
     }
   </style>
 </head>
 <body>
   <main>
     <header>
-      <div class="avatar">
-        <img src="assets/cat-heads/kitty-head-happy.svg" alt="Mascotte di kit-ty: testa di gatto sorridente" width="96" height="96">
+      <div class="mascot-wrap" id="mascot-wrap">
+        <button class="mascot" id="mascot" type="button" aria-label="Accarezza il gattino di kit-ty">
+          <svg viewBox="0 0 32 31" shape-rendering="crispEdges" aria-hidden="true" focusable="false">
+            <g class="cat">
+              <g class="paw-up"><path fill="#FFFFFF" d="M25 13h3v1h-3zM27 14h1v1h-1zM25 15h3v1h-3zM24 16h4v1h-4zM22 17h6v1h-6zM22 18h5v1h-5zM22 19h2v1h-2z"/><path fill="#F25481" d="M25 12h3v1h-3zM24 13h1v1h-1zM28 13h1v1h-1zM24 14h1v1h-1zM28 14h1v1h-1zM24 15h1v1h-1zM28 15h1v1h-1zM28 16h1v1h-1zM28 17h1v1h-1zM27 18h1v1h-1zM24 19h3v1h-3z"/><path fill="#FBC3D3" d="M25 14h2v1h-2z"/></g>
+              <g class="body"><path fill="#FFFFFF" d="M3 5h1v1h-1zM6 5h14v1h-14zM22 5h1v1h-1zM3 6h20v1h-20zM3 7h20v1h-20zM3 8h4v1h-4zM9 8h8v1h-8zM19 8h4v1h-4zM3 9h3v1h-3zM7 9h2v1h-2zM10 9h6v1h-6zM17 9h2v1h-2zM20 9h3v1h-3zM3 10h1v1h-1zM6 10h6v1h-6zM14 10h6v1h-6zM22 10h1v1h-1zM3 11h2v1h-2zM7 11h3v1h-3zM11 11h1v1h-1zM14 11h1v1h-1zM16 11h3v1h-3zM21 11h2v1h-2zM3 12h1v1h-1zM6 12h5v1h-5zM12 12h2v1h-2zM15 12h5v1h-5zM22 12h1v1h-1zM3 13h20v1h-20zM4 14h18v1h-18zM6 15h14v1h-14zM5 17h7v1h-7zM14 17h10v1h-10zM4 18h8v1h-8zM14 18h10v1h-10zM4 19h20v1h-20zM3 20h4v1h-4zM12 20h11v1h-11zM3 21h3v1h-3zM13 21h10v1h-10zM3 22h3v1h-3zM13 22h10v1h-10zM3 23h3v1h-3zM13 23h10v1h-10zM3 24h4v1h-4zM12 24h11v1h-11zM3 25h20v1h-20zM3 26h2v1h-2zM9 26h8v1h-8zM21 26h2v1h-2zM3 27h1v1h-1zM5 27h1v1h-1zM7 27h2v1h-2zM10 27h6v1h-6zM17 27h2v1h-2zM20 27h1v1h-1zM22 27h1v1h-1z"/><path fill="#F25481" d="M4 1h2v1h-2zM20 1h2v1h-2zM3 2h1v1h-1zM6 2h1v1h-1zM19 2h1v1h-1zM22 2h1v1h-1zM3 3h1v1h-1zM7 3h1v1h-1zM18 3h1v1h-1zM22 3h1v1h-1zM3 4h1v1h-1zM8 4h10v1h-10zM22 4h1v1h-1zM2 5h1v1h-1zM23 5h1v1h-1zM2 6h1v1h-1zM23 6h1v1h-1zM2 7h1v1h-1zM23 7h1v1h-1zM2 8h1v1h-1zM23 8h1v1h-1zM2 9h1v1h-1zM23 9h1v1h-1zM2 10h1v1h-1zM12 10h2v1h-2zM23 10h1v1h-1zM2 11h1v1h-1zM23 11h1v1h-1zM2 12h1v1h-1zM23 12h1v1h-1zM2 13h1v1h-1zM23 13h1v1h-1zM3 14h1v1h-1zM22 14h1v1h-1zM4 15h2v1h-2zM20 15h2v1h-2zM5 16h1v1h-1zM20 16h4v1h-4zM4 17h1v1h-1zM3 18h1v1h-1zM3 19h1v1h-1zM2 20h1v1h-1zM23 20h1v1h-1zM2 21h1v1h-1zM23 21h1v1h-1zM2 22h1v1h-1zM23 22h1v1h-1zM2 23h1v1h-1zM23 23h1v1h-1zM2 24h1v1h-1zM23 24h1v1h-1zM2 25h1v1h-1zM23 25h1v1h-1zM2 26h1v1h-1zM5 26h4v1h-4zM17 26h4v1h-4zM23 26h1v1h-1zM2 27h1v1h-1zM4 27h1v1h-1zM9 27h1v1h-1zM16 27h1v1h-1zM21 27h1v1h-1zM23 27h1v1h-1zM3 28h20v1h-20z"/><path fill="#FBC3D3" d="M4 2h2v1h-2zM20 2h2v1h-2zM4 3h3v1h-3zM19 3h3v1h-3zM4 4h4v1h-4zM18 4h4v1h-4zM4 5h2v1h-2zM20 5h2v1h-2zM4 10h2v1h-2zM20 10h2v1h-2zM5 11h2v1h-2zM19 11h2v1h-2zM4 12h2v1h-2zM20 12h2v1h-2zM6 27h1v1h-1zM19 27h1v1h-1z"/><path fill="#81366F" d="M7 8h2v1h-2zM17 8h2v1h-2zM6 9h1v1h-1zM9 9h1v1h-1zM16 9h1v1h-1zM19 9h1v1h-1zM10 11h1v1h-1zM12 11h2v1h-2zM15 11h1v1h-1zM11 12h1v1h-1zM14 12h1v1h-1zM6 16h14v1h-14zM9 21h1v1h-1zM8 22h3v1h-3zM9 23h1v1h-1z"/><path fill="#F2C14E" d="M12 17h2v1h-2zM12 18h2v1h-2zM7 20h5v1h-5zM6 21h3v1h-3zM10 21h3v1h-3zM6 22h2v1h-2zM11 22h2v1h-2zM6 23h3v1h-3zM10 23h3v1h-3zM7 24h5v1h-5z"/></g>
+              <g class="paw-rest"><path fill="#FFFFFF" d="M24 16h3v1h-3zM24 17h3v1h-3zM24 18h3v1h-3z"/><path fill="#F25481" d="M27 18h1v1h-1zM24 19h3v1h-3z"/></g>
+            </g>
+          </svg>
+        </button>
       </div>
       <h1>kit-ty</h1>
       <p class="tagline">The shared common fund for group trips, with no one holding the money.</p>
-      <ul class="strip" aria-hidden="true">
-        <li><img src="assets/cat-heads/kitty-head-alice.svg" alt="" width="36" height="36"></li>
-        <li><img src="assets/cat-heads/kitty-head-bob.svg" alt="" width="36" height="36"></li>
-        <li><img src="assets/cat-heads/kitty-head-charlie.svg" alt="" width="36" height="36"></li>
-        <li><img src="assets/cat-heads/kitty-head-dave.svg" alt="" width="36" height="36"></li>
-        <li><img src="assets/cat-heads/kitty-head-angry.svg" alt="" width="36" height="36"></li>
-        <li><img src="assets/cat-heads/kitty-head-worried.svg" alt="" width="36" height="36"></li>
-        <li><img src="assets/cat-heads/kitty-head-out.svg" alt="" width="36" height="36"></li>
+      <ul class="strip" id="strip">
+        <li><button type="button" data-name="Alice"><img src="assets/cat-heads/kitty-head-alice.svg" alt="Alice" width="36" height="36"></button></li>
+        <li><button type="button" data-name="Bob"><img src="assets/cat-heads/kitty-head-bob.svg" alt="Bob" width="36" height="36"></button></li>
+        <li><button type="button" data-name="Charlie"><img src="assets/cat-heads/kitty-head-charlie.svg" alt="Charlie" width="36" height="36"></button></li>
+        <li><button type="button" data-name="Dave"><img src="assets/cat-heads/kitty-head-dave.svg" alt="Dave" width="36" height="36"></button></li>
+        <li><button type="button" data-name="Grrr!"><img src="assets/cat-heads/kitty-head-angry.svg" alt="Gatto arrabbiato" width="36" height="36"></button></li>
+        <li><button type="button" data-name="Chi paga?"><img src="assets/cat-heads/kitty-head-worried.svg" alt="Gatto preoccupato" width="36" height="36"></button></li>
+        <li><button type="button" data-name="Ciao ciao!"><img src="assets/cat-heads/kitty-head-out.svg" alt="Gatto che esce" width="36" height="36"></button></li>
       </ul>
     </header>
 
@@ -242,7 +430,7 @@
       <h2 id="h-team">Team</h2>
       <ul class="links">
         <li>
-          <a class="btn" href="https://www.linkedin.com/in/federico-papantuono-528579393 " target="_blank" rel="noopener noreferrer">
+          <a class="btn" href="https://www.linkedin.com/in/federico-papantuono-528579393" target="_blank" rel="noopener noreferrer">
             <img class="head" src="assets/cat-heads/kitty-head-bob.svg" alt="" width="36" height="36">
             <span class="label">Federico Papantuono<small>LinkedIn</small></span>
             <span class="arrow" aria-hidden="true">↗</span>
@@ -256,7 +444,7 @@
           </a>
         </li>
         <li>
-          <a class="btn" href="https://www.linkedin.com/in/paolo-stella-73905b445 " target="_blank" rel="noopener noreferrer">
+          <a class="btn" href="https://www.linkedin.com/in/paolo-stella-73905b445" target="_blank" rel="noopener noreferrer">
             <img class="head" src="assets/cat-heads/kitty-head-charlie.svg" alt="" width="36" height="36">
             <span class="label">Paolo Stella<small>LinkedIn</small></span>
             <span class="arrow" aria-hidden="true">↗</span>
@@ -282,20 +470,15 @@
             <span class="arrow" aria-hidden="true">↗</span>
           </a>
         </li>
+        <!-- Bottone pronto per Nostr: togli il commento e metti il tuo npub.
         <li>
-          <a class="btn social" href="[URL_MASTODON]" target="_blank" rel="noopener noreferrer me">
-            <span class="badge" aria-hidden="true">M</span>
-            <span class="label">Mastodon</span>
+          <a class="btn social" href="https://njump.me/[NPUB]" target="_blank" rel="noopener noreferrer">
+            <span class="badge" aria-hidden="true">N</span>
+            <span class="label">Nostr</span>
             <span class="arrow" aria-hidden="true">↗</span>
           </a>
         </li>
-        <li>
-          <a class="btn social" href="[URL_BLUESKY]" target="_blank" rel="noopener noreferrer">
-            <span class="badge" aria-hidden="true">B</span>
-            <span class="label">Bluesky</span>
-            <span class="arrow" aria-hidden="true">↗</span>
-          </a>
-        </li>
+        -->
       </ul>
     </section>
 
@@ -313,9 +496,174 @@
     </section>
 
     <footer>
-      <img src="assets/cat-heads/kitty-head-worried.svg" alt="" width="28" height="28">
+      <div class="footer-cat">
+        <img class="worried" src="assets/cat-heads/kitty-head-worried.svg" alt="" width="28" height="28">
+        <img class="happy" src="assets/cat-heads/kitty-head-happy.svg" alt="" width="28" height="28">
+      </div>
+      <span class="hint">nobody holds the money, relax</span>
       kit-ty
     </footer>
   </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (function () {
+    "use strict";
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    // ---------- Toast ----------
+    var toast = document.getElementById("toast");
+    var toastTimer;
+    function say(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2600);
+    }
+
+    // ---------- Mascotte: fusa al passaggio del cursore ----------
+    var mascot = document.getElementById("mascot");
+    var wrap = document.getElementById("mascot-wrap");
+    var purrTimer = null;
+    var purrWords = ["prrr", "rrrr", "purr", "prr~", "♥"];
+
+    function spawnPurr() {
+      if (reduceMotion) return;
+      var el = document.createElement("span");
+      el.className = "purr-text";
+      el.textContent = purrWords[Math.floor(Math.random() * purrWords.length)];
+      el.style.setProperty("--dx", (Math.random() * 90 - 60) + "px");
+      wrap.appendChild(el);
+      setTimeout(function () { el.remove(); }, 1300);
+    }
+    function startPurr() {
+      mascot.classList.add("purring");
+      if (purrTimer) return;
+      spawnPurr();
+      purrTimer = setInterval(spawnPurr, 450);
+    }
+    function stopPurr() {
+      mascot.classList.remove("purring");
+      clearInterval(purrTimer);
+      purrTimer = null;
+    }
+    mascot.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") startPurr(); });
+    mascot.addEventListener("pointerleave", stopPurr);
+    mascot.addEventListener("focus", startPurr);
+    mascot.addEventListener("blur", stopPurr);
+
+    // ---------- Mascotte: clic = zampa giù; 7 clic di fila = monete ----------
+    var pawTimer, clicks = 0, clickTimer;
+    mascot.addEventListener("click", function () {
+      mascot.classList.add("paw-down");
+      clearTimeout(pawTimer);
+      pawTimer = setTimeout(function () { mascot.classList.remove("paw-down"); }, 450);
+
+      // su touch non c'è hover: un tap fa anche un po' di fusa
+      if (!finePointer) { spawnPurr(); spawnPurr(); }
+
+      clicks++;
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(function () { clicks = 0; }, 1500);
+      if (clicks === 7) {
+        clicks = 0;
+        coinRain();
+        say("Maneki-neko approves: fortune for the group fund! 🪙");
+      }
+    });
+
+    function coinRain() {
+      if (reduceMotion) return;
+      for (var i = 0; i < 28; i++) {
+        (function (i) {
+          setTimeout(function () {
+            var c = document.createElement("span");
+            c.className = "coin";
+            c.textContent = "₿";
+            c.style.left = (Math.random() * 100) + "vw";
+            c.style.setProperty("--t", (1.8 + Math.random() * 1.6) + "s");
+            c.style.setProperty("--drift", (Math.random() * 120 - 60) + "px");
+            c.style.setProperty("--spin", (Math.random() > .5 ? "" : "-") + (180 + Math.random() * 540) + "deg");
+            document.body.appendChild(c);
+            setTimeout(function () { c.remove(); }, 3600);
+          }, i * 60);
+        })(i);
+      }
+    }
+
+    // ---------- Testine: saltano e dicono il nome ----------
+    document.getElementById("strip").addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      b.classList.remove("hop");
+      void b.offsetWidth; // riavvia l'animazione
+      b.classList.add("hop");
+      var old = b.querySelector(".bubble");
+      if (old) old.remove();
+      var bubble = document.createElement("span");
+      bubble.className = "bubble";
+      bubble.textContent = b.dataset.name;
+      b.appendChild(bubble);
+      setTimeout(function () { bubble.remove(); }, 1450);
+    });
+
+    // ---------- Tilt 3D dei bottoni (solo mouse) ----------
+    if (finePointer && !reduceMotion) {
+      document.querySelectorAll(".btn").forEach(function (btn) {
+        btn.addEventListener("pointermove", function (e) {
+          var r = btn.getBoundingClientRect();
+          var x = (e.clientX - r.left) / r.width;
+          var y = (e.clientY - r.top) / r.height;
+          btn.classList.add("tilting");
+          btn.style.transform =
+            "rotateX(" + ((0.5 - y) * 14).toFixed(2) + "deg) " +
+            "rotateY(" + ((x - 0.5) * 10).toFixed(2) + "deg) " +
+            "translateZ(8px)";
+          btn.style.setProperty("--gx", (x * 100).toFixed(1) + "%");
+          btn.style.setProperty("--gy", (y * 100).toFixed(1) + "%");
+        });
+        btn.addEventListener("pointerleave", function () {
+          btn.classList.remove("tilting");
+          btn.style.transform = "";
+        });
+      });
+    }
+
+    // ---------- Tastiera: codice Konami e "kitty" ----------
+    var konami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    var kPos = 0, typed = "";
+    document.addEventListener("keydown", function (e) {
+      var key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+
+      kPos = (key === konami[kPos]) ? kPos + 1 : (key === konami[0] ? 1 : 0);
+      if (kPos === konami.length) {
+        kPos = 0;
+        var on = document.body.classList.toggle("party");
+        say(on ? "Party mode: everyone pays, nobody holds 🎉" : "Party's over. Back to saving.");
+      }
+
+      if (key.length === 1) {
+        typed = (typed + key).slice(-5);
+        if (typed === "kitty") {
+          mascot.classList.add("paw-down");
+          setTimeout(function () { mascot.classList.remove("paw-down"); }, 450);
+          spawnPurr(); spawnPurr(); spawnPurr();
+          say("Miao! 🐾");
+        }
+      }
+    });
+
+    // ---------- Console ----------
+    try {
+      console.log(
+        "%c=^.^=  kit-ty",
+        "font: 700 20px system-ui; color: #F25481;"
+      );
+      console.log("Ficcanaso, eh? Il codice è aperto: https://github.com/marco-pedron/kit-ty\nPsst: prova il codice Konami. ↑ ↑ ↓ ↓ ← → ← → B A");
+    } catch (e) {}
+  })();
+  </script>
 </body>
 </html>
